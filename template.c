@@ -8,7 +8,6 @@ Simulator - main program
 
 #include <stdio.h>
 #include <stdlib.h>
-
 #include "project1.h" // header with all data structures
 
 //----------------------------------------------------------General
