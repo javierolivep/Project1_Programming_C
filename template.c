@@ -185,19 +185,5 @@ void SimulationLoop(int EventNumbers)
 
 int main (int argc, char ** argv)
 {
-	int EventNumbers;
-	printf ("Starting... \n");
-	CheckArguments(argc, argv);
-	if (argc < 2)
-	{
-		printf("Argument is missing\n");
-		exit (1);
-	}
-	EventNumbers = atoi(argv[1]);
-	printf("Event numbers are: %d\n", EventNumbers);
-	
-	
-	// initialize EventNumbers 
-	SimulationLoop(EventNumbers);
-	return 0;
+
 }
