@@ -78,31 +78,74 @@ struct Package * GeneratePackage()
 // function to initialize all stacks of Packages 
 void InitStacks()
 {
-
+	for (int i=0; i<NUMBER_OF_STACK; i++)
+	{
+		Top_ofPackageStacks[i] = NULL;
+		CurrentState[i] = 0;
+	}
 }
 
 // function to print all stacks with all Packages
 void PrintPackages()
 {
-
+	const char* PackageType[] = {"small", "medium", "large"};
+	const char* Colors[] = {"white", "green", "yellow", "beige"};
+	for (int i=0; i<NUMBER_OF_STACK; i++)
+	{
+		printf("Stack %d: (%s)\n", i+1, PackageType[i]);
+		if (Top_ofPackageStacks[i] == NULL)
+		{
+			printf("  Empty\n");
+		}
+		else
+		{
+			struct Package* temp = Top_ofPackageStacks[i];
+			int j = 1;
+			while (temp != NULL)
+			{
+				printf("  Package %d: size %s - color %s\n", j, PackageType[temp->type], Colors[temp->color]);
+				temp = temp-> next;
+				j++;
+			}
+		}
+	}
 }
 
 // function to remove all packages from a given stack when its MAX_CAPACITY is reached
-void RemoveStack(/*...*/)
+void RemoveStack(int stack_index)
 {
-
+	struct Package *current = Top_ofPackageStacks[stack_index];
+	while (current != NULL)
+	{
+		struct Package *temp = current;
+		current = current->next;
+		free(temp);
+	}
+	Top_ofPackageStacks[stack_index] = NULL;
+	CurrentState[stack_index] = 0;
 }
 
 // function to simulate putting a generated Package to a corresponding stack depending on the type (size)
-void SimulateClassifyPackage(struct Package * Package)
+void SimulateClassifyPackage(struct Package * package)
 {
-
+	// Put node on top of stack
+	int stack_index = package->type;
+	package->next = Top_ofPackageStacks[stack_index];
+	Top_ofPackageStacks[stack_index] = package;
+	CurrentState[stack_index]++;
+	if (CurrentState[stack_index]>=MAX_CAPACITY)
+	{
+		RemoveStack(stack_index);
+	}
 }
 
 // function to clean all stacks before the end of the program
 void CleanPackageStacks()
 {
-
+	for (int stack_index=0; stack_index<NUMBER_OF_STACK; stack_index++)
+	{
+		RemoveStack(stack_index);
+	}
 }
 
 //----------------------------------------------------------Shopping -> Queue
