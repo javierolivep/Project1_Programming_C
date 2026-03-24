@@ -56,25 +56,80 @@ struct RobotPackage * GenerateRobotPackage()
 // function to print a list of RobotPackages
 void PrintRobotPackages()
 {
-	
+	struct RobotPackage *current = RobotPackagesHead;
+	printf("Data in the list of packages: \n");
+	while (current != NULL)
+    {
+        printf("supplier: %s, ID: %s, year: %d\n", current->supplier, current->id, current->year);
+        current = current->next;
+    }
+    printf("\n");
 }
 
 // function to search for a RobotPackage
-struct RobotPackage * SearchRobotPackage(/*...*/)
+struct RobotPackage *SearchRobotPackage(char *supp, char *id, char year)
 {
-
+	int position = 1;
+	struct RobotPackage *current = RobotPackagesHead;
+	while (current != NULL)
+	{
+		if (strcmp(current->supplier,supp ) == 0 && 
+			strcmp(current->id, id) == 0 && 
+			current->year == year)
+		{
+			printf("Package found at position number %d\n", position);
+            return current;
+		}
+		current = current->next;
+		position++;
+	}
+	printf("Package not found\n");
+	return NULL;
 }
 
 // function to simulate an insertion of RobotPackages in a ordered way (sorted by supplier)
 void SimulateManagingRobotPackages(struct RobotPackage * RobotPackage)
 {
+	RobotPackage->next = NULL;
 
+    if (RobotPackagesHead == NULL)
+    {
+        RobotPackagesHead = RobotPackage;
+        return;
+    }
+    else if (strcmp(RobotPackage->supplier, RobotPackagesHead->supplier) < 0)
+    {
+        RobotPackage->next = RobotPackagesHead;
+        RobotPackagesHead = RobotPackage;
+        return;
+    }
+
+	struct RobotPackage *current = RobotPackagesHead;
+	struct RobotPackage *previous;
+	while (current != NULL &&
+           strcmp(current->supplier, RobotPackage->supplier) <= 0)
+	{
+		previous = current;
+		current = current->next;
+	}
+	previous->next = RobotPackage;
+	RobotPackage->next= current;
+	
 }
 
 // function to remove all the RobotPackages from the list at the end of the program
 void RemoveAllRobotPackages()
 {
+	struct RobotPackage *current = RobotPackagesHead;
+    struct RobotPackage *nextNode;
 
+    while (current != NULL)
+    {
+        nextNode = current->next;
+        free(current);
+        current = nextNode;
+    }
+    RobotPackagesHead = NULL;
 }
 
 //----------------------------------------------------------Packages -> different Stacks
