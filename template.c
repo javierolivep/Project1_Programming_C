@@ -19,7 +19,23 @@ enum EventType GenerateEventType()
 
 void CheckArguments (int argc, char ** argv)
 {
-	// check the input introduced by the user
+	if (argc != 2)
+	{
+		printf("Error: correct usage is ./program #events\n");
+		exit(1);
+	}
+	char *endptr;
+	long n = strtol(argv[1], &endptr, 10);
+	if (*endptr != '\0')
+	{
+		printf("Error: #events argument must be a valid integer\n");
+		exit(1);
+	}
+	if (n<=0)
+	{
+		printf("Error: #events must be a positive integer\n");
+		exit(1);
+	}
 }
 
 //----------------------------------------------------------RobotPackages -> Sorted list
