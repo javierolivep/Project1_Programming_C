@@ -218,25 +218,89 @@ void CleanShoppingQueue(/*...*/)
 void SimulationLoop(int EventNumbers)
 {
 	// declare and initialize necessary variables
+	int robot_timer = 0;
 
 	InitStacks();
 	
 	for (int i=0; i<EventNumbers; i++)    
 	{
 		// generate event type
+		int event_type = GenerateEventType(); 
 		// depending on the generated event type:
-		// event type 0: 
+		switch(event_type)
+		{
+			// event type 0: 
 			// generate RobotPackage 
 			// Simulate managing RobotPackages (sorting)
-		// event type 1:
+			case 0:
+			{
+				struct RobotPackage *robot_package = GenerateRobotPackage();
+				SimulateManagingRobotPackages(robot_package);
+				break;
+			}
+			// event type 1:
 			// generate Package
 			// Simulate classifying Packages (putting to a corresponding stack)
-		// event type 2:
+			case 1:
+			{
+				struct Package *package = GeneratePackage();
+				SimulateClassifyPackage(package);
+				break;
+			}
+			// event type 2:
 			// generate shopping
 			// Simulate go for shopping 
+			case 2:
+			{
+				struct Shopping *shopping = GenerateShopping();
+				SimulateGoForShopping(shopping);
+				break;
+			}
+		}
 		// UpdateShopping
+		UpdateShoppingQueue(&robot_timer);
 	}
 	// CLEANING THE SIMULATION
+	printf("program %d", EventNumbers);
+	// keep void and count at the end, check stored numbers before removing
+	printf("STATISTICS WHEN CLEANING THE SIMULATION:\n");
+	// robotPackages
+	printf("Removing packages...\n");
+	struct RobotPackage *current;
+	int count = 0;
+	current = RobotPackagesHead;
+	while (current != NULL)
+	{
+		count++;
+		current = current->next;
+	}
+	RemoveAllRobotPackages();
+	printf("%d packages have been removed.\n", count);
+	// packages
+	count = 0;
+	printf("Cleaning all stacks of packages...\n");
+	for (int i=0; i<NUMBER_OF_STACK; i++)
+	{
+		struct Package *current = Top_ofPackageStacks[i];
+		while (current != NULL) // TODO common function?
+		{
+			count++;
+			current = current->next;
+		}
+	}
+	CleanPackageStacks();
+	printf("%d packages have been removed\n", count);
+	// shopping
+	printf("Cleaning shopping queue...\n");
+	struct Shopping *current = queueFirst;
+	count = 0;
+	while (current != NULL)
+	{
+		count++;
+		current = current->next;
+	}
+	CleanShoppingQueue();
+	printf("%d robots have been removed\n", count);
 }
 
 int main (int argc, char ** argv)
@@ -245,8 +309,6 @@ int main (int argc, char ** argv)
 	printf ("Starting... \n");
 	CheckArguments(argc, argv);
 	EventNumbers = atoi(argv[1]);
-
-	// initialize EventNumbers 
 	SimulationLoop(EventNumbers);
 	return 0;
 }
