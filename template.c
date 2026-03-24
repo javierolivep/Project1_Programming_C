@@ -228,5 +228,12 @@ void SimulationLoop(int EventNumbers)
 
 int main (int argc, char ** argv)
 {
+	int EventNumbers;
+	printf ("Starting... \n");
+	CheckArguments(argc, argv);
+	EventNumbers = atoi(argv[1]);
 
+	// initialize EventNumbers 
+	SimulationLoop(EventNumbers);
+	return 0;
 }
