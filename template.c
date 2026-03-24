@@ -236,20 +236,54 @@ struct Shopping * GenerateShopping()
 // function to print a list of robots in a shopping queue
 void PrintShopping()
 {
-
+	struct Shopping *current = queueFirst;
+	while (current != NULL)
+	{
+		printf("things to buy: %d, ID: %d\n", current->numberThingsToBuy, current->robot_id);
+        current = current->next;
+	}
+	printf("\n")
 }
 
 // function to add a robot to a shopping queue
 void AddToQueue(struct Shopping * shopping)
 {
-
+	shopping->next = NULL;
+	if (queueFirst == NULL)
+	{
+		printf("creating the queue...");
+		queueFirst = shopping;
+		queueLast = shopping;
+		return;
+	}
+	queueLast->next = shopping;
+	queueLast = shopping;
+	return;
 }
 
 // function to remove a robot from the queue and serve it
 // it may return the number of things to buy to simulate the time
 int Dequeue ()
 {
+    if (queueFirst == NULL)
+    {
+        printf("Queue is already empty\n");
+        return 0;
+    }
 
+    struct Shopping *tmp = queueFirst;
+    int things = tmp->numberThingsToBuy;
+    if (queueFirst->next == NULL)
+    {
+        queueFirst = NULL;
+        queueLast = NULL;
+    }
+    else
+    {
+        queueFirst = queueFirst->next;
+    }
+    free(tmp);
+    return things;
 }
 
 // function to simulate the time the robot is in the queue
