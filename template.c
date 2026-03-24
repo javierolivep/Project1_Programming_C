@@ -182,9 +182,22 @@ int Dequeue ()
 }
 
 // function to simulate the time the robot is in the queue
-void UpdateShoppingQueue (/*...*/)
+// function to simulate the time the robot is in the queue
+void UpdateShoppingQueue (int *robot_timer)
 {
-
+	/// check if queue is empty, then do nothing, checking the pointer queueFirst
+	/// if not empty, proceed to another check
+	/// check0: if timer is 0, next robot leaves the queue and does first action
+	/// check1: timer advances + next robot action happens
+	/// timer--
+	if (queueFirst != NULL)
+	{
+		if (*robot_timer == 0)
+		{
+			*robot_timer = Dequeue();
+		}
+		(*robot_timer)--; // Decision: robot can be deployed and take action in the same turn. If not, then the -- goes inside an else
+	}
 }
 
 // function to simulate a robot going for shopping - add to the queue
