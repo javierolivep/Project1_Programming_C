@@ -41,7 +41,7 @@ void CheckArguments (int argc, char ** argv)
 		printf("Error: #events argument must be a valid integer\n");
 		exit(1);
 	}
-	if (n<=0)
+	if (n<0)
 	{
 		printf("Error: #events must be a positive integer\n");
 		exit(1);
@@ -54,7 +54,6 @@ void CheckArguments (int argc, char ** argv)
 struct RobotPackage * GenerateRobotPackage()
 {
 	struct RobotPackage * RobotPackage=malloc(sizeof(struct RobotPackage));
-	if (RobotPackage == NULL) {printf("Error: Memory allocation failed\n"); exit(1);} // TODO: we add extra check, altough this code piece is said not to alter
 	int RobotPackageNum=rand()%8;
 	strcpy (RobotPackage->supplier, suppliers[RobotPackageNum]);
 	strcpy (RobotPackage->id, ids[RobotPackageNum]);
@@ -143,7 +142,6 @@ void RemoveAllRobotPackages()
 struct Package * GeneratePackage()
 {
 	struct Package * Package=malloc(sizeof(struct Package));
-	if (Package == NULL) {printf("Error: Memory allocation failed\n"); exit(1);}
 	enum PackageType type=rand()%3;
 	enum Colors color=rand()%4;
 	Package->type = type;
@@ -167,7 +165,7 @@ void PrintPackages() // TODO also unused
 	printf("Displaying stack data...\n");
 	for (int i=0; i<NUMBER_OF_STACK; i++)
 	{
-		printf("Stack %d:",  i);
+		printf("Stack %d:\n",  i);
 		if (Top_ofPackageStacks[i] == NULL)
 		{
 			printf("  Empty\n");
@@ -175,10 +173,10 @@ void PrintPackages() // TODO also unused
 		else
 		{
 			struct Package *current = Top_ofPackageStacks[i];
-			printf("%-15s %-10s\n", "Size",  "Color");
+			printf("    %-15s %-10s\n", "Size",  "Color");
 			while (current != NULL)
 			{
-				printf("%-15s %-10s\n", PackageType[current->type], Colors[current->color]);
+				printf("    %-15s %-10s\n", PackageType[current->type], Colors[current->color]);
 				current = current->next;
 			}
 		}
@@ -208,7 +206,6 @@ void SimulateClassifyPackage(struct Package * package)
 	if (CurrentState[stack_index]>=MAX_CAPACITY)
 	{
 		RemoveStack(stack_index); // TODO stack instantly deleted once full
-		printf("Stack %d is full, clearing...", stack_index)
 	}
 }
 
@@ -226,7 +223,6 @@ void CleanPackageStacks()
 struct Shopping * GenerateShopping()
 {
 	struct Shopping * shopping=malloc(sizeof(struct Shopping));
-	if (shopping == NULL) {printf("Error: Memory allocation failed\n"); exit(1);}
 	int n=rand()%5+1;
 	shopping->numberThingsToBuy = n;
 	nextRobotID++;
@@ -250,7 +246,6 @@ void AddToQueue(struct Shopping * shopping)
 	shopping->next = NULL;
 	if (queueFirst == NULL)
 	{
-		printf("Creating the queue...\n");
 		queueFirst = shopping;
 		queueLast = shopping;
 		return;
@@ -274,7 +269,6 @@ int Dequeue ()
     {
         queueFirst = NULL;
         queueLast = NULL;
-		printf("Queue is now empty\n");
     }
     else
     {
