@@ -7,7 +7,7 @@
  * 			Team:	
  * 				Name          Surname          NIU
  * 				--------------------------------------
- * 				Javier        Olivé Padrós     1
+ * 				Javier        Olivé Padrós     1794767
  * 				Juanma        Machado Millan   1797427
    ────────────────────────────────────────────────────────────────────────────────────────── */
 
@@ -29,23 +29,17 @@ enum EventType GenerateEventType()
 
 void CheckArguments (int argc, char ** argv)
 {
-	if (argc != 2)
+	int EventNumbers;
+	if (argc < 2)
 	{
-		printf("Error: correct usage is ./program #events\n");
-		exit(1);
+		printf("Argument is missing\n");
+		exit (1);
 	}
-	char *endptr;
-	long n = strtol(argv[1], &endptr, 10);
-	if (*endptr != '\0')
-	{
-		printf("Error: #events argument must be a valid integer\n");
-		exit(1);
-	}
-	if (n<0)
-	{
-		printf("Error: #events must be a positive integer\n");
-		exit(1);
-	}
+	else if (atoi(argv[1]) <= 0)
+    {
+        printf("Error: NumberOfEvents must be an integer grater than 0.\n");
+        exit(1);
+    }
 }
 
 /* ──────────────────────────────────────────────────────────────────────────────────────────
