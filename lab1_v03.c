@@ -181,9 +181,10 @@ void PrintPackages() // TODO also unused
 void RemoveStack(int stack_index)
 {
 	struct Package *current = Top_ofPackageStacks[stack_index];
+	struct Package *temp = NULL;
 	while (current != NULL)
 	{
-		struct Package *temp = current;
+		temp = current;
 		current = current->next;
 		free(temp);
 	}
