@@ -27,10 +27,11 @@ enum EventType GenerateEventType()
 	return rand()%3;
 }
 
+/* Checks whether the program arguments are valid.*/
 void CheckArguments (int argc, char ** argv)
 {
 	int EventNumbers; 
-	if (argc < 2) // if there is no argument assigned (1st one is the name of the program)
+	if (argc < 2) // if there is no argument assigned (<2 because argv[0] is always the program name)
 	{
 		printf("Argument is missing\n");
 		exit (1);
@@ -56,24 +57,27 @@ struct RobotPackage * GenerateRobotPackage()
 	return RobotPackage;
 }
 
+/* Prints all RobotPackage nodes currently stored in the sorted linked list. */
 void PrintRobotPackages()
 {
 	struct RobotPackage *current = RobotPackagesHead;
 	printf("Data in the list of packages: \n");
 	while (current != NULL)
     {
-        printf("supplier: %s, ID: %s, year: %d\n", current->supplier, current->id, current->year);
+        printf("supplier: %s, ID: %s, year: %d\n", current->supplier, current->id, current->year); // all the atributes
         current = current->next;
     }
     printf("\n");
 }
 
+/* Searches a RobotPackage in the sorted list by supplier, id and year.*/
 struct RobotPackage *SearchRobotPackage(char *supp, char *id, int year) // TODO: unused function?
 {
 	int position = 1;
 	struct RobotPackage *current = RobotPackagesHead;
 	while (current != NULL)
 	{
+		// if found
 		if (strcmp(current->supplier,supp ) == 0 && 
 			strcmp(current->id, id) == 0 && 
 			current->year == year)
@@ -81,41 +85,50 @@ struct RobotPackage *SearchRobotPackage(char *supp, char *id, int year) // TODO:
 			printf("Package found at position number %d\n", position);
             return current;
 		}
+		
 		current = current->next;
 		position++;
 	}
+	// if not found
 	printf("Package not found\n");
 	return NULL;
 }
 
+/* Inserts a RobotPackage into the linked list while keeping the list sorted
+ * alphabetically by supplier */
 void SimulateManagingRobotPackages(struct RobotPackage * robot_package)  // TODO What happens when packages share supplier? Order by year or id? Doesnt matter?
 {
 	robot_package->next = NULL;
 
+	// Empty list: new node becomes the head.
     if (RobotPackagesHead == NULL)
     {
         RobotPackagesHead = robot_package;
         return;
     }
+	// Insert at the beginning if it should go just before the current head.
     else if (strcmp(robot_package->supplier, RobotPackagesHead->supplier) < 0)
     {
         robot_package->next = RobotPackagesHead;
         RobotPackagesHead = robot_package;
         return;
     }
-
+	// Else, the list is traversed until the correct insertion point is found.
 	struct RobotPackage *current = RobotPackagesHead;
 	struct RobotPackage *previous = NULL;
+	// Move forward until the correct sorted position is found
 	while (current != NULL &&
            strcmp(current->supplier, robot_package->supplier) <= 0)
 	{
 		previous = current;
 		current = current->next;
 	}
+	// Insert between previous and current
 	previous->next = robot_package;
 	robot_package->next = current;
 }
 
+/* Frees all RobotPackage nodes from the linked list and leaves the list empty */
 void RemoveAllRobotPackages()
 {
 	struct RobotPackage *current = RobotPackagesHead;
