@@ -238,34 +238,41 @@ struct Shopping * GenerateShopping()
 	return shopping;
 }
 
+/* Prints all robots currently in the shopping queue */
 void PrintShopping()
 {
 	struct Shopping *current = queueFirst;
 	while (current != NULL)
 	{
-		printf("things to buy: %d, ID: %d\n", current->numberThingsToBuy, current->robot_id);
+		printf("things to buy: %d, ID: %d\n", current->numberThingsToBuy, current->robot_id); // all atributes
         current = current->next;
 	}
 	printf("\n");
 }
 
+/* Adds a Shopping robot to the end of the queue */
 void AddToQueue(struct Shopping * shopping)
 {
 	shopping->next = NULL;
+	// if the queue is empty the new robot is now first and last
 	if (queueFirst == NULL)
 	{
 		queueFirst = shopping;
 		queueLast = shopping;
 		return;
 	}
+	// else, new robot is added at the end and assigned as the last one
 	queueLast->next = shopping;
 	queueLast = shopping;
 	return;
 }
 
+/* Removes the first Shopping Robot from the queue and
+ * returns the number of things that robot had to buy */
 int Dequeue ()
 {
-    if (queueFirst == NULL)
+    // if empty, there is nothing to remove
+	if (queueFirst == NULL)
     {
         printf("Queue is already empty\n");
         return 0;
@@ -273,6 +280,8 @@ int Dequeue ()
 
     struct Shopping *tmp = queueFirst;
     int things = tmp->numberThingsToBuy;
+	
+	// if only one robot, now queue is empty
     if (queueFirst->next == NULL)
     {
         queueFirst = NULL;
@@ -282,10 +291,17 @@ int Dequeue ()
     {
         queueFirst = queueFirst->next;
     }
-    free(tmp);
+    free(tmp); 
     return things;
 }
 
+/* Updates the shopping queue by simulating one time unit:
+ *
+ * variable robot_timer stores the remaining shopping time of the robot currently being served.
+ *  -If there is no robot in the queue, nothing happens.
+ *  -If no robot is currently being served (timer = 0), the first robot leaves the queue
+ *   and starts shopping, and its shopping time is loaded into robot_timer.
+ *  -Finally one time unit has passed */
 void UpdateShoppingQueue (int *robot_timer)
 {
 	if (queueFirst != NULL)
@@ -298,21 +314,24 @@ void UpdateShoppingQueue (int *robot_timer)
 	}
 }
 
+/* Simulates a robot going shopping by adding it to the queue */
 void SimulateGoForShopping(struct Shopping * shopping)
 {
 	AddToQueue(shopping);
 }
 
+/* Removes and frees all remaining robots waiting in the shopping queue */
 void CleanShoppingQueue()
 {
     while (queueFirst != NULL)
     {
         Dequeue();
     }
+	queueFirst = queueLast = NULL;
 }
 
 /* ──────────────────────────────────────────────────────────────────────────────────────────
- * 																						 MAIN
+ * 																			  MAIN SIMULATION
    ────────────────────────────────────────────────────────────────────────────────────────── */
 
 void SimulationLoop(int EventNumbers)
@@ -380,12 +399,20 @@ void SimulationLoop(int EventNumbers)
 	printf("%d robots have been removed\n", count);
 }
 
+/* ──────────────────────────────────────────────────────────────────────────────────────────
+                                                            MAIN (Entry point of the program)
+   ────────────────────────────────────────────────────────────────────────────────────────── */
 int main (int argc, char ** argv)
 {
 	int EventNumbers;
 	printf ("Starting... \n");
+	// Validate command-line arguments
 	CheckArguments(argc, argv);
+	
+	// Convert the input argument to integer
 	EventNumbers = atoi(argv[1]);
+	
+	// Run the simulation
 	SimulationLoop(EventNumbers);
 	return 0;
 }
