@@ -29,13 +29,13 @@ enum EventType GenerateEventType()
 
 void CheckArguments (int argc, char ** argv)
 {
-	int EventNumbers;
-	if (argc < 2)
+	int EventNumbers; 
+	if (argc < 2) // if there is no argument assigned (1st one is the name of the program)
 	{
 		printf("Argument is missing\n");
 		exit (1);
 	}
-	else if (atoi(argv[1]) <= 0)
+	else if (atoi(argv[1]) <= 0) // if argument is negative
     {
         printf("Error: NumberOfEvents must be an integer grater than 0.\n");
         exit(1);
