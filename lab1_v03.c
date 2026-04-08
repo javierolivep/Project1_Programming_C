@@ -70,28 +70,18 @@ void PrintRobotPackages()
     printf("\n");
 }
 
-/* Searches a RobotPackage in the sorted list by supplier, id and year.*/
-struct RobotPackage *SearchRobotPackage(char *supp, char *id, int year) // TODO: unused function?
+/* Searches the corresponding position for a RobotPackage to be placed in the sorted list by supplier.*/
+struct RobotPackage *SearchRobotPackage(char *supp)
 {
-	int position = 1;
-	struct RobotPackage *current = RobotPackagesHead;
-	while (current != NULL)
-	{
-		// if found
-		if (strcmp(current->supplier,supp ) == 0 && 
-			strcmp(current->id, id) == 0 && 
-			current->year == year)
-		{
-			printf("Package found at position number %d\n", position);
-            return current;
-		}
-		
-		current = current->next;
-		position++;
-	}
-	// if not found
-	printf("Package not found\n");
-	return NULL;
+    struct RobotPackage *current = RobotPackagesHead;
+    struct RobotPackage *previous = NULL;
+	// Move forward until the correct sorted position is found
+    while (current != NULL && strcmp(current->supplier, supp) <= 0)
+    {
+        previous = current;
+        current = current->next;
+    }
+    return previous;
 }
 
 /* Inserts a RobotPackage into the linked list while keeping the list sorted
@@ -114,18 +104,11 @@ void SimulateManagingRobotPackages(struct RobotPackage * robot_package)  // TODO
         return;
     }
 	// Else, the list is traversed until the correct insertion point is found.
-	struct RobotPackage *current = RobotPackagesHead;
-	struct RobotPackage *previous = NULL;
-	// Move forward until the correct sorted position is found
-	while (current != NULL &&
-           strcmp(current->supplier, robot_package->supplier) <= 0)
-	{
-		previous = current;
-		current = current->next;
-	}
-	// Insert between previous and current
-	previous->next = robot_package;
-	robot_package->next = current;
+ 	struct RobotPackage *previous = SearchRobotPackage(RobotPackage->supplier);
+    struct RobotPackage *after = previous->next;
+	// Insert Robotpackage between previous and after:
+    previous->next = RobotPackage;
+    RobotPackage->next = after;
 }
 
 /* Frees all RobotPackage nodes from the linked list and leaves the list empty */
